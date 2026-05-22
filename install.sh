@@ -39,7 +39,7 @@ pip install --default-timeout=1000 --retries 10 tensorflow==2.13.0
 
 echo "==> Installing mediapipe (--no-compile avoids broken test file in wheel)..."
 pip uninstall mediapipe -y 2>/dev/null || true
-pip install --default-timeout=1000 --retries 10 --no-compile --no-deps "mediapipe==0.10.11"
+pip install --default-timeout=1000 --retries 10 --no-compile --no-deps "mediapipe>=0.10.30,<0.11"
 pip install --default-timeout=1000 --retries 10 \
   "absl-py" "attrs>=19.1.0" "flatbuffers>=2.0" "matplotlib" \
   "protobuf>=3.11,<4" "sounddevice>=0.4.4" \

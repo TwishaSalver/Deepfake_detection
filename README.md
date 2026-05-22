@@ -115,6 +115,22 @@ streamlit run app.py
 
 Open the URL shown in the terminal (usually http://localhost:8501).
 
+### Deploy on Streamlit Community Cloud
+
+1. Push this repo to GitHub (includes `.python-version` with **3.11** — required).
+2. Go to [share.streamlit.io](https://share.streamlit.io) → **Create app**.
+3. Repo: `varadasaiakhila/Deepfake_detection`, branch `main`, file `app.py`.
+4. In **Advanced settings**, set **Python version** to **3.11** if the deploy still uses 3.14.
+5. **Reboot** the app after pushing dependency fixes.
+
+Cloud installs from `requirements.txt` (no `kaggle`). Trained models are gitignored — use **Demo Mode** on Cloud unless you upload weights separately.
+
+Local training with Kaggle:
+
+```bash
+pip install -r requirements-local.txt
+```
+
 ## Standalone modules
 
 ```bash
