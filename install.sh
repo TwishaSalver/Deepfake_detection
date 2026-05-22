@@ -48,8 +48,5 @@ pip install --default-timeout=1000 --retries 10 \
 echo "==> Re-pin numpy + opencv after mediapipe deps..."
 pip install --default-timeout=1000 --retries 10 "numpy>=1.23,<2.0" "opencv-python-headless>=4.8,<4.11"
 
-echo "==> Fix typing_extensions for Streamlit (TensorFlow pins an old version)..."
-pip install "typing-extensions>=4.10,<5"
-
 echo "==> Done. Verify:"
 python verify_install.py

@@ -1,0 +1,9 @@
+# Lightweight Cloud deploy (Demo Mode + UI). Set this file in Streamlit Advanced settings.
+setuptools>=65,<82
+numpy>=1.23,<2.0
+Pillow>=9.0
+pandas
+matplotlib
+seaborn
+streamlit
+opencv-python-headless>=4.8,<4.11

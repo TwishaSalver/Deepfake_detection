@@ -123,12 +123,21 @@ Open the URL shown in the terminal (usually http://localhost:8501).
 4. In **Advanced settings**, set **Python version** to **3.11** if the deploy still uses 3.14.
 5. **Reboot** the app after pushing dependency fixes.
 
-Cloud installs from `requirements.txt` (no `kaggle`). Trained models are gitignored — use **Demo Mode** on Cloud unless you upload weights separately.
+**If install fails** (TensorFlow / typing-extensions / memory):
 
-Local training with Kaggle:
+1. Streamlit app → **Settings** → **Advanced**
+2. Set **Python version** to **3.11**
+3. Set **Requirements file** to `requirements-cloud.txt` (demo + UI only, fast)
+4. **Reboot** app
+
+Full ML stack uses `requirements.txt` (no `typing-extensions` pin — avoids TF conflict).
+
+Trained models are gitignored — use **Demo Mode** on Cloud unless you upload weights.
+
+Local training:
 
 ```bash
-pip install -r requirements-local.txt
+pip install -r requirements-full.txt
 ```
 
 ## Standalone modules

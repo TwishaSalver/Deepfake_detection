@@ -17,8 +17,26 @@ import seaborn as sns
 import streamlit as st
 from PIL import Image
 
-from ensemble import predict_deepfake, predict_deepfake_demo
-from models import models_available
+def _models_status():
+    try:
+        from models import models_available
+
+        return models_available()
+    except Exception:
+        keys = ["eyes", "nose", "chin", "ears", "face", "posture"]
+        return {k: False for k in keys}
+
+
+def _predict_deepfake(image, demo_mode=False):
+    from ensemble import predict_deepfake
+
+    return predict_deepfake(image, demo_mode=demo_mode)
+
+
+def _predict_demo():
+    from ensemble import predict_deepfake_demo
+
+    return predict_deepfake_demo()
 
 ROOT = Path(__file__).resolve().parent
 METRICS_PATH = ROOT / "saved_models" / "metrics.json"
@@ -103,7 +121,7 @@ def page_detection():
     st.title("Deepfake Detection System")
     st.caption("Multi-model ensemble: face CViT, region CNNs, and posture MLP")
 
-    status = models_available()
+    status = _models_status()
     trained_count = sum(status.values())
     if trained_count == 0:
         st.info("No trained models found. Use **Detect** with uploaded image, or **Use Demo Mode** below.")
@@ -123,11 +141,11 @@ def page_detection():
         if st.button("Detect", type="primary", width="stretch"):
             with st.spinner("Running ensemble inference..."):
                 if demo_mode:
-                    result = predict_deepfake_demo()
+                    result = _predict_demo()
                 else:
-                    result = predict_deepfake(np.array(image), demo_mode=False)
+                    result = _predict_deepfake(np.array(image), demo_mode=False)
                     if not any(status.values()):
-                        result = predict_deepfake_demo()
+                        result = _predict_demo()
                         st.warning("No models trained — showing demo output.")
 
             render_verdict_badge(result)
@@ -147,7 +165,7 @@ def page_detection():
                 with st.expander("Raw JSON response"):
                     st.json(result)
     elif demo_mode:
-        result = predict_deepfake_demo()
+        result = _predict_demo()
         render_verdict_badge(result)
         preds = result.get("model_predictions", {})
         if preds:

@@ -8,7 +8,6 @@ from pathlib import Path
 
 import cv2
 import numpy as np
-from mtcnn import MTCNN
 from PIL import Image
 
 try:
@@ -30,6 +29,8 @@ _mp_pose = None
 def _get_mtcnn():
     global _mtcnn
     if _mtcnn is None:
+        from mtcnn import MTCNN
+
         _mtcnn = MTCNN()
     return _mtcnn
 

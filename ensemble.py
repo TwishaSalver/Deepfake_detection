@@ -22,8 +22,6 @@ from models import (
     prepare_cnn_batch,
     prepare_posture_batch,
 )
-from preprocessing import preprocess_image
-
 SAVED_DIR = Path(__file__).resolve().parent / "saved_models"
 
 
@@ -112,6 +110,8 @@ def predict_deepfake(image_path, demo_mode=False):
         return _demo_prediction()
 
     try:
+        from preprocessing import preprocess_image
+
         regions = preprocess_image(image_path)
     except Exception as e:
         return {
