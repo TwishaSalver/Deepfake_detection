@@ -1,0 +1,24 @@
+# Core (install first if network is slow — see install.sh)
+setuptools>=65,<82
+numpy>=1.23,<2.0
+Pillow>=9.0
+tqdm
+pandas
+scikit-learn
+matplotlib
+seaborn
+streamlit
+typing-extensions>=4.10,<5
+
+# Vision / ML (large wheels — may need --default-timeout=1000)
+opencv-python-headless>=4.8,<4.11
+mtcnn
+# Install mediapipe separately: pip install --no-compile --no-deps mediapipe==0.10.11
+mediapipe==0.10.11
+kaggle
+
+# Deep learning (largest downloads)
+torch==2.0.1
+torchvision==0.15.2
+timm
+tensorflow==2.13.0
