@@ -195,7 +195,7 @@ def cvit_path():
 
 
 def posture_path():
-    return SAVED_DIR / "posture_model.keras"
+    return SAVED_DIR / "posture_model.h5"
 
 
 def models_available():
