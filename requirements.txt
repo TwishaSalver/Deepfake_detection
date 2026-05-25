@@ -1,20 +1,21 @@
-# Streamlit Cloud: Python 3.11 (.python-version). Do NOT pin typing-extensions (TF needs <4.6).
-setuptools>=65,<82
-numpy>=1.23,<2.0
-Pillow>=9.0
+streamlit
+numpy==1.26.4
 pandas
+Pillow
 matplotlib
 seaborn
-streamlit
 
-opencv-python-headless>=4.8,<4.11
+opencv-python-headless==4.10.0.84
+
+torch==2.2.2
+torchvision==0.17.2
+torchaudio==2.2.2
+
+tensorflow==2.16.1
+keras==3.3.3
+
+mediapipe==0.10.14
+protobuf==3.20.3
+
 mtcnn==0.1.1
-mediapipe>=0.10.30,<0.11
-protobuf>=3.11,<4
-keras==2.13.1
 
---extra-index-url https://download.pytorch.org/whl/cpu
-torch==2.0.1
-torchvision==0.15.2
-timm
-tensorflow==2.13.0
