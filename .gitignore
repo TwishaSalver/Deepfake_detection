@@ -1,0 +1,33 @@
+# Python
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# Data & trained weights (large — regenerate with train.py)
+data/
+saved_models/*.h5
+saved_models/*.pth
+saved_models/metrics.json
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Kaggle
+kaggle.json
+*.zip
+
+venv311/
+__pycache__/
+*.pyc
+train_run.log
+
+# models if too large
+# saved_models/

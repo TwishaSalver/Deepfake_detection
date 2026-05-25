@@ -1,0 +1,5 @@
+# Local dev + training (install: pip install -r requirements-full.txt)
+-r requirements.txt
+tqdm
+scikit-learn
+kaggle
