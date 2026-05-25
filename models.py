@@ -6,6 +6,7 @@ Works standalone: python models.py
 import os
 from pathlib import Path
 
+
 import numpy as np
 
 SAVED_DIR = Path(__file__).resolve().parent / "saved_models"
@@ -22,23 +23,44 @@ def build_cnn(input_shape):
         Conv2D,
         Dense,
         Dropout,
-        Flatten,
+        GlobalAveragePooling2D,
         MaxPooling2D,
     )
 
     model = Sequential(
         [
-            Conv2D(32, (3, 3), activation="relu", padding="same", input_shape=input_shape),
+            Conv2D(32, (3, 3), padding="same", input_shape=input_shape),
             BatchNormalization(),
+            tf.keras.layers.Activation("relu"),
+            Conv2D(32, (3, 3), padding="same"),
+            BatchNormalization(),
+            tf.keras.layers.Activation("relu"),
+            MaxPooling2D(2, 2),
+            Dropout(0.25),
+            Conv2D(64, (3, 3), padding="same"),
+            BatchNormalization(),
+            tf.keras.layers.Activation("relu"),
+            Conv2D(64, (3, 3), padding="same"),
+            BatchNormalization(),
+            tf.keras.layers.Activation("relu"),
             MaxPooling2D(2, 2),
             Dropout(0.3),
-            Conv2D(64, (3, 3), activation="relu", padding="same"),
+            Conv2D(128, (3, 3), padding="same"),
             BatchNormalization(),
+            tf.keras.layers.Activation("relu"),
+            Conv2D(128, (3, 3), padding="same"),
+            BatchNormalization(),
+            tf.keras.layers.Activation("relu"),
             MaxPooling2D(2, 2),
-            Dropout(0.3),
-            Flatten(),
+            Dropout(0.35),
+            Conv2D(256, (3, 3), padding="same"),
+            BatchNormalization(),
+            tf.keras.layers.Activation("relu"),
+            MaxPooling2D(2, 2),
+            Dropout(0.4),
+            GlobalAveragePooling2D(),
             Dense(256, activation="relu"),
-            Dropout(0.3),
+            Dropout(0.4),
             Dense(2, activation="softmax"),
         ]
     )
@@ -54,13 +76,18 @@ def build_posture_mlp(input_shape=(132,)):
     """TensorFlow MLP for posture keypoints."""
     import tensorflow as tf
     from tensorflow.keras import Sequential
-    from tensorflow.keras.layers import Dense, Dropout
+    from tensorflow.keras.layers import BatchNormalization, Dense, Dropout
 
     model = Sequential(
         [
-            Dense(128, activation="relu", input_shape=input_shape),
+            Dense(256, activation="relu", input_shape=input_shape),
+            BatchNormalization(),
+            Dropout(0.4),
+            Dense(192, activation="relu"),
+            BatchNormalization(),
             Dropout(0.3),
-            Dense(64, activation="relu"),
+            Dense(96, activation="relu"),
+            Dropout(0.25),
             Dense(2, activation="softmax"),
         ]
     )
@@ -81,6 +108,8 @@ def build_cvit(num_classes=2, pretrained=True):
         "vit_small_patch16_224",
         pretrained=pretrained,
         num_classes=num_classes,
+        drop_rate=0.2,
+        drop_path_rate=0.1,
     )
     return model
 
@@ -154,10 +183,10 @@ def prepare_posture_batch(posture_vec):
 
 def cnn_paths():
     return {
-        "eyes": SAVED_DIR / "cnn_eyes.h5",
-        "nose": SAVED_DIR / "cnn_nose.h5",
-        "chin": SAVED_DIR / "cnn_chin.h5",
-        "ears": SAVED_DIR / "cnn_ears.h5",
+        "eyes": SAVED_DIR / "cnn_eyes.keras",
+        "nose": SAVED_DIR / "cnn_nose.keras",
+        "chin": SAVED_DIR / "cnn_chin.keras",
+        "ears": SAVED_DIR / "cnn_ears.keras",
     }
 
 
@@ -166,7 +195,7 @@ def cvit_path():
 
 
 def posture_path():
-    return SAVED_DIR / "posture_model.h5"
+    return SAVED_DIR / "posture_model.keras"
 
 
 def models_available():

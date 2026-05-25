@@ -4,6 +4,7 @@ Launch: streamlit run app.py
 """
 
 import os
+import tempfile
 
 os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "2")
 
@@ -33,10 +34,32 @@ def _predict_deepfake(image, demo_mode=False):
     return predict_deepfake(image, demo_mode=demo_mode)
 
 
+def _predict_deepfake_video(video_path, demo_mode=False):
+    from ensemble import predict_deepfake_video
+
+    return predict_deepfake_video(video_path, demo_mode=demo_mode)
+
+
 def _predict_demo():
     from ensemble import predict_deepfake_demo
 
     return predict_deepfake_demo()
+
+
+def _is_video_file(uploaded):
+    if hasattr(uploaded, "type") and uploaded.type.startswith("video"):
+        return True
+    name = getattr(uploaded, "name", "") or ""
+    return name.lower().endswith((".mp4", ".mov", ".avi", ".mkv", ".webm"))
+
+
+def _save_uploaded_video(uploaded):
+    suffix = Path(getattr(uploaded, "name", "video.mp4")).suffix or ".mp4"
+    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=suffix)
+    tmp.write(uploaded.read())
+    tmp.flush()
+    tmp.close()
+    return tmp.name
 
 ROOT = Path(__file__).resolve().parent
 METRICS_PATH = ROOT / "saved_models" / "metrics.json"
@@ -56,6 +79,7 @@ MODEL_LABELS = {
     "ears": "Ears CNN",
     "face": "CViT Face",
     "posture": "Posture MLP",
+    "video": "Video Ensemble",
 }
 
 
@@ -132,16 +156,29 @@ def page_detection():
     with col_status:
         st.write("Models on disk:", {k: "✅" if v else "❌" for k, v in status.items()})
 
-    uploaded = st.file_uploader("Upload a face image", type=["jpg", "jpeg", "png"])
+    uploaded = st.file_uploader(
+        "Upload a face image or video",
+        type=["jpg", "jpeg", "png", "mp4", "mov", "avi", "mkv", "webm"],
+    )
 
     if uploaded:
-        image = Image.open(uploaded).convert("RGB")
-        st.image(image, caption="Uploaded image", width="stretch")
+        is_video = _is_video_file(uploaded)
+        if is_video:
+            video_path = _save_uploaded_video(uploaded)
+            st.video(video_path)
+        else:
+            image = Image.open(uploaded).convert("RGB")
+            st.image(image, caption="Uploaded image", width="stretch")
 
         if st.button("Detect", type="primary", width="stretch"):
             with st.spinner("Running ensemble inference..."):
                 if demo_mode:
                     result = _predict_demo()
+                elif is_video:
+                    result = _predict_deepfake_video(video_path, demo_mode=False)
+                    if not any(status.values()):
+                        result = _predict_demo()
+                        st.warning("No models trained — showing demo output.")
                 else:
                     result = _predict_deepfake(np.array(image), demo_mode=False)
                     if not any(status.values()):

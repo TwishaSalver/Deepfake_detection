@@ -101,11 +101,25 @@ python train.py
 
 This will:
 
-1. Download **200 real + 200 fake** images (or generate dummy PNGs if Kaggle fails)
+1. Use real images from `data/raw/real` and `data/raw/fake`, or provide extra dataset paths for other collections like FaceForensics/DFDC.
+   ```bash
+   python train.py --external-real /path/to/real_images --external-fake /path/to/fake_images
+   ```
+   Or use labeled dataset roots containing both real/fake subfolders:
+   ```bash
+   python train.py --external-dataset /path/to/FaceForensics
+   ```
 2. Split **80% train / 20% test**
 3. Preprocess with MTCNN + region crops + MediaPipe posture
-4. Train CNNs (20 epochs), CViT (10 epochs), posture MLP (20 epochs)
-5. Save weights under `saved_models/` and metrics to `saved_models/metrics.json`
+4. Train CNNs (60 epochs), CViT (20 epochs), posture MLP (80 epochs)
+5. Evaluate assembled video inference by sampling frames from test images
+6. Save weights under `saved_models/` and metrics to `saved_models/metrics.json`
+
+If no real/fake raw images are available, training will stop with an error unless you explicitly allow synthetic fallback:
+
+```bash
+python train.py --allow-synthetic
+```
 
 ## Run the dashboard
 

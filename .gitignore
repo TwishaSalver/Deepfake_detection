@@ -23,3 +23,11 @@ saved_models/metrics.json
 # Kaggle
 kaggle.json
 *.zip
+
+venv311/
+__pycache__/
+*.pyc
+train_run.log
+
+# models if too large
+# saved_models/
